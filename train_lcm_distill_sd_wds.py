@@ -601,6 +601,7 @@ def main(args):
         )
         return {"prompt_embeds": prompt_embeds}
 
+    print(11, args.train_shards_path_or_url)
     dataset = SDText2ImageDataset(
         train_shards_path_or_url=args.train_shards_path_or_url,
         num_train_examples=args.max_train_samples,

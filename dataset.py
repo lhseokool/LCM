@@ -107,6 +107,7 @@ class SDText2ImageDataset:
         pin_memory: bool = False,
         persistent_workers: bool = False,
     ):
+        print(22, train_shards_path_or_url)
         if not isinstance(train_shards_path_or_url, str):
             train_shards_path_or_url = [
                 list(braceexpand(urls)) for urls in train_shards_path_or_url
