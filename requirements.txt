@@ -7,3 +7,5 @@ Jinja2
 datasets
 webdataset
 img2dataset
+torchmetrics
+pycocotools
