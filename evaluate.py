@@ -7,6 +7,7 @@ from torchvision.models import inception_v3
 from torchvision import transforms
 from scipy.linalg import sqrtm
 from PIL import Image
+from torchmetrics.image.fid import FrechetInceptionDistance
 
 # 1. COCO annotations 파일 로드
 def load_coco_annotations(annotation_file):
@@ -37,7 +38,7 @@ def get_inception_features(image):
     ])
 
     image = transform(image).unsqueeze(0)
-    
+
     with torch.no_grad():
         features = model(image)
     
@@ -71,18 +72,29 @@ def calculate_fid_for_first_image(image_dir, annotation_file):
     pipe.scheduler = LCMScheduler.from_config(pipe.scheduler.config)
     pipe.to("cuda")
     
-    # 캡션을 이용하여 이미지 생성
+    # # 캡션을 이용하여 이미지 생성
     prompt = img_caption_mapping[first_image_file][0]  # 첫 번째 이미지의 첫 번째 캡션 사용
     generated_image = pipe(prompt, num_inference_steps=4, guidance_scale=8.0).images[0]
+    
+    generated_image.save("generated_image.jpg")
+    real_image.save("real_image.jpg")
 
-    # 실제 이미지와 생성된 이미지에서 InceptionV3 feature 추출
-    real_features = get_inception_features(real_image)
-    generated_features = get_inception_features(generated_image)
+    # # 실제 이미지와 생성된 이미지에서 InceptionV3 feature 추출
+    # real_features = get_inception_features(real_image)  # 2048
+    # generated_features = get_inception_features(generated_image)  # 2048
     
-    # FID 계산
-    fid_score = calculate_fid(np.array([real_features]), np.array([generated_features]))
+    # fid = FrechetInceptionDistance(normalize=True)
+    # fid.update(real_features, real=True)
+    # fid.update(generated_features, real=False)
+
+    # print(f"FID: {float(fid.compute())}")
+        
+    # # print(real_features.shape)
+    # # print(generated_features.shape)
+    # # # FID 계산
+    # # fid_score = calculate_fid(np.array([real_features]), np.array([generated_features]))
     
-    return fid_score
+    # return fid_score
 
 # COCO annotations 파일 경로와 이미지 디렉토리 설정
 annotation_file = "/workspace/LCM/data/annotations/captions_val2017.json"
