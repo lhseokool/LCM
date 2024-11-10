@@ -1,8 +1,10 @@
 *.parquet
 wandb/
-bench/
-output_folder/
-saved/
+data/
+results/
+complexity/
+IC9600/
+PickScore/
 data/
 
 # Byte-compiled / optimized / DLL files
